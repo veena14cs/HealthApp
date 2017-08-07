@@ -157,6 +157,7 @@ public class IconActivity extends AppCompatActivity
             Intent i = new Intent(IconActivity.this, Reports.class);
             startActivity(i);
 
+
         }
         else if (id == R.id.logout) {
             Intent i = new Intent(IconActivity.this, Reports.class);
