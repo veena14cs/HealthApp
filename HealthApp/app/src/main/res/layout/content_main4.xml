@@ -1,77 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:gravity="center_horizontal"
-    android:layout_margin="16dp"
     android:layout_height="match_parent"
-    android:layout_width="match_parent"
+    android:clipToPadding="true"
+    android:layout_width="wrap_content"
+    android:layout_gravity="top|center"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/app_bar_main4"
-    tools:context="com.example.user.healthapp.MainActivity">
+    tools:context="com.example.user.healthapp.MainActivity"
+    >
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_margin="16dp"
+        android:layout_gravity="center|top"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content">
+
+        <EditText
+            android:id="@+id/usr_floder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Create Your Floder"
+            android:inputType="textPersonName" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:background="@drawable/button_border"
+            />
+
+        <Button
+            android:id="@+id/pick"
+            android:layout_width="204dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/button_border"
+
+            android:text="Pick an image"
+            android:textColor="#000" />
+
+        <Button
+            android:id="@+id/upload"
+            android:layout_width="206dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/button_border"
+
+            android:text="Upload"
+            android:textColor="#000" />
 
 
-    <EditText
-        android:id="@+id/usr_floder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Create Your Floder"
-        android:inputType="textPersonName" />
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Save"
-        android:background="@drawable/button_border"
-        />
-
-    <Button
-        android:id="@+id/pick"
-        android:layout_width="204dp"
-        android:layout_height="wrap_content"
-        android:onClick="pickAImage"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/button_border"
-
-        android:text="Pick an image"
-        android:textColor="#000" />
-
-    <Button
-        android:id="@+id/upload"
-        android:layout_width="206dp"
-        android:layout_height="wrap_content"
-
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/button_border"
-
-        android:text="Upload"
-        android:textColor="#000" />
 
 
+        <ImageView
+            android:layout_height="300dp"
+            android:layout_width="300dp"
+            android:cropToPadding="true"
+            android:padding="10dp"
+            android:id="@+id/display_image"/>
 
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="TextView"
+            android:id="@+id/textView"/>
 
-    <ImageView
-        android:layout_height="wrap_content"
-        android:layout_width="300dp"
-        android:id="@+id/display_image"/>
+        <TextView android:gravity="bottom|center"
+            android:layout_height="fill_parent"
+            android:layout_width="fill_parent"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:autoLink="web"/>
 
-    <TextView
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:text="TextView"
-        android:id="@+id/textView"/>
-
-    <TextView android:gravity="bottom|center"
-        android:layout_height="fill_parent"
-        android:layout_width="fill_parent"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:autoLink="web"/>
-
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>
