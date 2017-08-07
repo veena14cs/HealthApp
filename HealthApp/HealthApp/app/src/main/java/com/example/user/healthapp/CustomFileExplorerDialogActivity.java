@@ -477,6 +477,8 @@ public class CustomFileExplorerDialogActivity extends AppCompatActivity
 
                     if (code == 1) {
                         Toast.makeText(getBaseContext(), "Saved", Toast.LENGTH_SHORT).show();
+                        Intent i = new Intent(CustomFileExplorerDialogActivity.this, IconActivity.class);
+                        startActivity(i);
                     } else {
                         Toast.makeText(getBaseContext(), "Sorry,Try again", Toast.LENGTH_LONG).show();
                     }
@@ -544,7 +546,8 @@ public class CustomFileExplorerDialogActivity extends AppCompatActivity
                     code = (json_data.getInt("code"));
 
                     if (code == 1) {
-                        Toast.makeText(getBaseContext(), "Saved", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getBaseContext(), "Upload Successful.", Toast.LENGTH_SHORT).show();
+
                     } else {
                         Toast.makeText(getBaseContext(), "Sorry,Try again", Toast.LENGTH_LONG).show();
                     }
