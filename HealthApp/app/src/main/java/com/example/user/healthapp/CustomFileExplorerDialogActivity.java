@@ -434,6 +434,7 @@ public class CustomFileExplorerDialogActivity extends AppCompatActivity
                 }
                 try {
                     JSONObject json_data = new JSONObject(result);
+                    Log.e("resp", result);
                     code = (json_data.getInt("code"));
 
                     if (code == 1) {
