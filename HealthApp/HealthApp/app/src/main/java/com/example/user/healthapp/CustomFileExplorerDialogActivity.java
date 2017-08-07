@@ -19,14 +19,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Handler;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
@@ -67,10 +70,12 @@ import org.json.JSONObject;
 public class CustomFileExplorerDialogActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final int PERMISSIONS_WRITE_EXTERNAL_STORAGE = 198;
+    private static final int PERMISSIONS_READ_EXTERNAL_STORAGE = 199;
     private static final int SELECT_PHOTO = 100;
     ImageView image;
     TextView txt;
-    Button upload, floder_save;
+    Button upload, floder_save,pickImageBtn;
     int serverResponseCode = 0;
     ProgressDialog dialog = null;
     String uploaded_file;
@@ -100,6 +105,7 @@ public class CustomFileExplorerDialogActivity extends AppCompatActivity
         usr_floder = (EditText) findViewById(R.id.usr_floder);
         upload = (Button) findViewById(R.id.upload);
         floder_save = (Button) findViewById(R.id.button);
+        pickImageBtn = (Button) findViewById(R.id.pick);
 
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,6 +143,12 @@ public class CustomFileExplorerDialogActivity extends AppCompatActivity
             }
         });
 
+        pickImageBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickAImage();
+            }
+        });
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -162,10 +174,14 @@ public class CustomFileExplorerDialogActivity extends AppCompatActivity
 
     }
 
-    public void pickAImage(View view) {
-        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-        photoPickerIntent.setType("image/*");
-        startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+    public void pickAImage() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_WRITE_EXTERNAL_STORAGE);
+            } else {
+            Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+            photoPickerIntent.setType("image/*");
+            startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+        }
 
     }
 
@@ -175,40 +191,64 @@ public class CustomFileExplorerDialogActivity extends AppCompatActivity
 
         switch (requestCode) {
             case SELECT_PHOTO:
-                if (resultCode == RESULT_OK) {
-                    Uri selectedImage = imageReturnedIntent.getData();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_READ_EXTERNAL_STORAGE);
+                } else {
+                    if (resultCode == RESULT_OK) {
+                        Uri selectedImage = imageReturnedIntent.getData();
 
 
-                    try {
-                        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
-                        uploaded_file = getRealPathFromURI(selectedImage);
+                        try {
+                            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
+                            bitmap = ImageResizer.decodeSampledBitmapFromFile(getRealPathFromURI(selectedImage), 2000, 1800);
+                            uploaded_file = getRealPathFromURI(selectedImage);
 
 
-                        filename = uploaded_file.substring(uploaded_file.lastIndexOf("/") + 1);
+                            filename = uploaded_file.substring(uploaded_file.lastIndexOf("/") + 1);
 
-                        org_file = filename;
-                        txt.setText(uploaded_file);
+                            org_file = filename;
+                            txt.setText(uploaded_file);
 
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        InputStream imageStream = null;
+                        try {
+                            imageStream = getContentResolver().openInputStream(selectedImage);
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        Bitmap yourSelectedImage = BitmapFactory.decodeStream(imageStream);
+                        image.setImageBitmap(bitmap);// To display selected image in image view
                     }
-
-
-                    InputStream imageStream = null;
-                    try {
-                        imageStream = getContentResolver().openInputStream(selectedImage);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    Bitmap yourSelectedImage = BitmapFactory.decodeStream(imageStream);
-                    image.setImageURI(selectedImage);// To display selected image in image view
                 }
 
 
         }
     }
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
 
+        if (requestCode == PERMISSIONS_WRITE_EXTERNAL_STORAGE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+               pickAImage();
+            } else {
+                Toast.makeText(this, "Until you grant the permission, we canot display the names", Toast.LENGTH_SHORT).show();
+            }
+        }
+        if (requestCode == PERMISSIONS_READ_EXTERNAL_STORAGE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                pickAImage();
+            } else {
+                Toast.makeText(this, "Until you grant the permission, we canot display the names", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
     private String getRealPathFromURI(Uri contentURI) {
         String result;
         Cursor cursor = getContentResolver().query(contentURI, null, null, null, null);
@@ -385,6 +425,7 @@ public class CustomFileExplorerDialogActivity extends AppCompatActivity
 
 
     public void doc_save() {
+
         runOnUiThread(new Runnable() {
 
 
@@ -411,7 +452,9 @@ public class CustomFileExplorerDialogActivity extends AppCompatActivity
                     Log.e("pass 1", "connection success");
 
                 } catch (Exception e) {
+
                     Log.e("fail 1", e.toString());
+
                     //Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 }
                 try {
@@ -425,6 +468,7 @@ public class CustomFileExplorerDialogActivity extends AppCompatActivity
                     result = sb.toString();
                     Log.e("pass 2", "connection success");
                 } catch (Exception e) {
+
                     Log.e("fail 2", e.toString());
                 }
                 try {
@@ -437,6 +481,8 @@ public class CustomFileExplorerDialogActivity extends AppCompatActivity
                         Toast.makeText(getBaseContext(), "Sorry,Try again", Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
+
+
                     Log.e("fall 3", e.toString());
                     Log.i("tagconvertstr", "[" + result + "]");
                 }
@@ -449,6 +495,7 @@ public class CustomFileExplorerDialogActivity extends AppCompatActivity
 
 
     public void create_folder() {
+
         runOnUiThread(new Runnable() {
 
 
@@ -474,6 +521,7 @@ public class CustomFileExplorerDialogActivity extends AppCompatActivity
                     Log.e("pass 1", "connection success");
 
                 } catch (Exception e) {
+
                     Log.e("fail 1", e.toString());
                     //Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 }
@@ -488,6 +536,7 @@ public class CustomFileExplorerDialogActivity extends AppCompatActivity
                     result = sb.toString();
                     Log.e("pass 2", "connection success");
                 } catch (Exception e) {
+
                     Log.e("fail 2", e.toString());
                 }
                 try {
@@ -500,9 +549,11 @@ public class CustomFileExplorerDialogActivity extends AppCompatActivity
                         Toast.makeText(getBaseContext(), "Sorry,Try again", Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
+
                     Log.e("fall 3", e.toString());
                     Log.i("tagconvertstr", "[" + result + "]");
                 }
+
 
             }
 
