@@ -184,12 +184,13 @@ public class MainDocument extends AppCompatActivity
 
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
-        shareIntent.setType("*/*");
+        shareIntent.setType("text/plain");
+        shareIntent.setType("image/jpeg");
         //        shareIntent.putExtra(Intent.EXTRA_TEXT, text);
         // new code
         shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
         shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        startActivity(Intent.createChooser(shareIntent, "Files"));
+        startActivity(shareIntent);
 
     }
 
