@@ -360,7 +360,9 @@ public class CustomFileExplorerDialogActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-
+        Intent i = new Intent(CustomFileExplorerDialogActivity.this, IconActivity.class);
+        startActivity(i);
+        finish();
     }
 
     @Override
@@ -395,25 +397,31 @@ public class CustomFileExplorerDialogActivity extends AppCompatActivity
             // Handle the camera action
             Intent i = new Intent(CustomFileExplorerDialogActivity.this, IconActivity.class);
             startActivity(i);
+            finish();
         } else if (id == R.id.doc) {
             Intent i = new Intent(CustomFileExplorerDialogActivity.this, MainActivity.class);
             startActivity(i);
+            finish();
 
         } else if (id == R.id.user) {
             Intent i = new Intent(CustomFileExplorerDialogActivity.this, Documents.class);
             startActivity(i);
+            finish();
 
         } else if (id == R.id.plus) {
             Intent i = new Intent(CustomFileExplorerDialogActivity.this, CustomFileExplorerDialogActivity.class);
             startActivity(i);
+            finish();
 
         } else if (id == R.id.rep) {
             Intent i = new Intent(CustomFileExplorerDialogActivity.this, ViewReports.class);
             startActivity(i);
+            finish();
 
         } else if (id == R.id.query) {
             Intent i = new Intent(CustomFileExplorerDialogActivity.this, Reports.class);
             startActivity(i);
+            finish();
 
         }
 
@@ -477,8 +485,10 @@ public class CustomFileExplorerDialogActivity extends AppCompatActivity
 
                     if (code == 1) {
                         Toast.makeText(getBaseContext(), "Saved", Toast.LENGTH_SHORT).show();
+                        // finish actvity
                         Intent i = new Intent(CustomFileExplorerDialogActivity.this, IconActivity.class);
                         startActivity(i);
+                        finish();
                     } else {
                         Toast.makeText(getBaseContext(), "Sorry,Try again", Toast.LENGTH_LONG).show();
                     }
