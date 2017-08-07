@@ -5,12 +5,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.user.healthapp.DataClasses.Document;
+import com.example.user.healthapp.MainDocument;
 import com.example.user.healthapp.R;
 
 import java.util.ArrayList;
+
+import static com.example.user.healthapp.MainDocument.documentstoSend;
 
 /**
  * Created by atreya on 6/8/17.
@@ -44,6 +50,7 @@ public class Doc_List_Adapter extends BaseAdapter {
     private  class ViewHolder {
         TextView label,value;
         int position;
+        CheckBox cb;
         public View lineview;
     }
     @Override
@@ -59,7 +66,7 @@ public class Doc_List_Adapter extends BaseAdapter {
         holder = new ViewHolder();
         holder.label = (TextView) rowView.findViewById(R.id.doc_num);
         holder.value = (TextView) rowView.findViewById(R.id.doc_name);
-
+        holder.cb = (CheckBox)rowView.findViewById(R.id.checkBox1);
         final Document obj = listItems.get(position);
         holder.label.setText(obj.getDoc_no());
 
@@ -69,6 +76,20 @@ public class Doc_List_Adapter extends BaseAdapter {
 
         holder.value.setHint(fileNameWithoutExtn);
 
+
+        holder.cb.setChecked(false);
+        holder.cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton cb, boolean isChecked) {
+                if(cb.isChecked()) {
+                    // action
+                    documentstoSend.add(obj.getUrl());
+                }
+                else if(isChecked==false) {
+                    documentstoSend.remove(obj.getUrl());
+
+                }
+            }
+        });
 
         return rowView;
     }

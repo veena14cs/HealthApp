@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -61,6 +62,7 @@ public class MainDocument extends AppCompatActivity
     RelativeLayout container;
     Doc_List_Adapter adapter;
     ArrayList<Document> productList = new ArrayList<>();
+    public static ArrayList<String> documentstoSend=new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +82,7 @@ public class MainDocument extends AppCompatActivity
         });
         share = (Button) findViewById(R.id.share);
         docsList=(ListView)findViewById(R.id.docsList);
-
+        documentstoSend.clear();
         container=(RelativeLayout)findViewById(R.id.container);
         view_details();
 
@@ -110,8 +112,10 @@ public class MainDocument extends AppCompatActivity
             @Override
             public void onClick(View v) {
 
+
                 Bitmap icon = ((BitmapDrawable)imageView.getDrawable()).getBitmap();;
                 Intent share = new Intent(Intent.ACTION_SEND);
+
                 share.setType("image/jpeg");
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 icon.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
@@ -148,14 +152,7 @@ public class MainDocument extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -167,24 +164,59 @@ public class MainDocument extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    private void shareFiles() {
+
+//        Intent intent = new Intent();
+//        intent.setAction(Intent.ACTION_SEND_MULTIPLE);
+//        intent.putExtra(Intent.EXTRA_SUBJECT, "Here are some files.");
+
+//        intent.setType("image/*"); //any kind of images can support.
+        Log.e("docs arrat=",""+documentstoSend);
+        ArrayList<String> filesToSend=new ArrayList<>();
+
+        ArrayList<Uri> files = new ArrayList<Uri>();
+
+        for(String path : documentstoSend /* List of the files you want to send */) {
+            File file = new File(path);
+            Uri uri = Uri.fromFile(file);
+            files.add(uri);
+        }
+
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
+        shareIntent.setType("*/*");
+        //        shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+        // new code
+        shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
+        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        startActivity(Intent.createChooser(shareIntent, "Files"));
+
+    }
+
     private void initListners() {
         docsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-               Log.e("pos",""+position);
+                Log.e("pos", "" + position);
 
-                String SelectedPic = productList.get(position).getUrl();
-                if(!SelectedPic.isEmpty()) {
-                    Picasso.with(MainDocument.this).load(SelectedPic).placeholder(R.drawable.loadingimg)
-                            .into(imageView);
-                    container.setVisibility(View.VISIBLE);
-                    docsList.setVisibility(View.GONE);
-                }
-                else
-                {
-                    imageView.setImageResource(R.drawable.no_pic_placeholder_with_border);
-                }
+                    String SelectedPic = productList.get(position).getUrl();
+                    if (!SelectedPic.isEmpty()) {
+                        Picasso.with(MainDocument.this).load(SelectedPic).placeholder(R.drawable.loadingimg)
+                                .into(imageView);
+                        container.setVisibility(View.VISIBLE);
+                        docsList.setVisibility(View.GONE);
+                    } else {
+                        imageView.setImageResource(R.drawable.no_pic_placeholder_with_border);
+                    }
 
+                }
+        });
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                shareFiles();
             }
         });
     }
