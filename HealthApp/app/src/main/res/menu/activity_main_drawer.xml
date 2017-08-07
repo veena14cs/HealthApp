@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/home"
+            android:icon="@drawable/home"
+            android:title="Home" />
+        <item
+            android:id="@+id/doc"
+android:icon="@drawable/family_doctor"
+            android:title="Family Doctor" />
+        <item
+            android:id="@+id/user"
+android:icon="@drawable/profile"
+            android:title="User Profile" />
+        <item
+            android:id="@+id/plus"
+            android:icon="@drawable/upload_medical_doc"
+            android:title="Documents" />
+        <item
+            android:id="@+id/rep"
+            android:icon="@drawable/view_report"
+            android:title="Reports" />
+
+        <item
+            android:id="@+id/query"
+            android:icon="@drawable/emergency_call"
+            android:title="Emergency Call" />
+        <item
+            android:id="@+id/ren"
+            android:icon="@drawable/renewal"
+            android:title="Renewal" />
+
+        <item
+            android:id="@+id/logout"
+            android:icon="@drawable/renewal"
+            android:title="LOgout" />
+    </group>
+
+
+
+</menu>
