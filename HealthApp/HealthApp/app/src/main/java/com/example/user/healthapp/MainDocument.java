@@ -338,24 +338,15 @@ public class MainDocument extends AppCompatActivity
                     for (int i = 0; i < jArray.length(); i++) {
                         json_data = jArray.getJSONObject(i);
 
-
-
                         docno = json_data.getString("doc_id");
                         docURL  = json_data.getString("doc_name");
                         Log.e("docno",""+docno);
                         Log.e("docname",""+docURL);
 
-                        String fileName = docURL.substring( docURL.lastIndexOf('/')+1, docURL.length() );
-
-                        String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
-
-
                         Document obj = new Document();
 
-
-
                         obj.setDoc_no(docno);
-                        obj.setUrl(fileNameWithoutExtn);
+                        obj.setUrl(docURL);
 
                         productList.add(obj);
 
