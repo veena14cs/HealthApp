@@ -62,7 +62,12 @@ public class Doc_List_Adapter extends BaseAdapter {
 
         final Document obj = listItems.get(position);
         holder.label.setText(obj.getDoc_no());
-        holder.value.setHint(obj.getUrl());
+
+        String fileName = obj.getUrl().substring( obj.getUrl().lastIndexOf('/')+1, obj.getUrl().length() );
+
+        String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
+
+        holder.value.setHint(fileNameWithoutExtn);
 
 
         return rowView;

@@ -338,8 +338,6 @@ public class MainDocument extends AppCompatActivity
                     for (int i = 0; i < jArray.length(); i++) {
                         json_data = jArray.getJSONObject(i);
 
-
-
                         docno = json_data.getString("doc_id");
                         docURL  = json_data.getString("doc_name");
                         Log.e("docno",""+docno);
