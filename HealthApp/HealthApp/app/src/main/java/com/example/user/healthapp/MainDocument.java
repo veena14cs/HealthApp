@@ -345,10 +345,17 @@ public class MainDocument extends AppCompatActivity
                         Log.e("docno",""+docno);
                         Log.e("docname",""+docURL);
 
+                        String fileName = docURL.substring( docURL.lastIndexOf('/')+1, docURL.length() );
+
+                        String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
+
+
                         Document obj = new Document();
 
+
+
                         obj.setDoc_no(docno);
-                        obj.setUrl(docURL);
+                        obj.setUrl(fileNameWithoutExtn);
 
                         productList.add(obj);
 
